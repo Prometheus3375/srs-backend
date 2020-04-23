@@ -1,0 +1,21 @@
+django models and migrations tutorial
+    https://docs.djangoproject.com/en/3.0/intro/tutorial02/
+
+django static files tutorial
+    https://docs.djangoproject.com/en/3.0/intro/tutorial06/
+
+django Request and response objects
+    https://docs.djangoproject.com/en/3.0/ref/request-response/
+
+django sessions
+    https://docs.djangoproject.com/en/3.0/topics/http/sessions/
+
+HTTP methods (RU)
+    https://developer.mozilla.org/ru/docs/Web/HTTP/Methods
+
+django + React tutorials
+    https://wsvincent.com/django-rest-framework-react-tutorial/
+    https://www.valentinog.com/blog/drf/#setting-up-react-and-webpack
+
+django + React tutorial (RU)
+    https://www.digitalocean.com/community/tutorials/how-to-build-a-modern-web-application-to-manage-customer-information-with-django-and-react-on-ubuntu-18-04-ru
