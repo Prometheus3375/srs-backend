@@ -57,7 +57,7 @@ def process_query(request: HttpRequest):
     session: SessionBase = request.session
     printd(f'\nSession {session.session_key}')
     printd(f'''Remote IP: {request.META['REMOTE_ADDR']}''')
-    if request.method == 'GET':
+    if request.method == 'POST':
         body = _parsePQBody(request.body)
         if body is None:
             return HttpResponseBadRequest()
