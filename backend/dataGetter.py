@@ -1,12 +1,13 @@
-from typing import List
-from urllib.request import urlopen
-from urllib.error import HTTPError, URLError
-from http.client import HTTPResponse
-from django_backend.misc import printd
-from .misc import replace
 import json
 import re
 import traceback
+from http.client import HTTPResponse
+from typing import List
+from urllib.error import HTTPError, URLError
+from urllib.request import urlopen
+
+from django_backend.misc import printd
+from .misc import replace
 
 Scheme = 'http'
 Host = '188.130.155.81:6379'
