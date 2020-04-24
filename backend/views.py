@@ -70,9 +70,11 @@ def process_query(request: HttpRequest):
         # with open('backend/sample.json', 'r', encoding = 'utf-8') as f:
         #     result = json.load(f)
         # ENDTEST
-        printd(f'Type of data is {type(result).__name__}')
+        printd(f'Type of result is {type(result).__name__}')
         if len(result) > 0:
-            printd(f'Type of data[0] is {type(result[0]).__name__}')
+            printd(f'    type of result[0] is {type(result[0]).__name__}')
+        else:
+            printd(f'    result is empty')
 
         session['data'] = result
         session.modified = True  # to ensure that changes will be saved

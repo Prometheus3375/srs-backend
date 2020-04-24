@@ -26,13 +26,13 @@ def get(querytype: str, sites: List[str], query: str) -> List[dict]:
         printd(f'Data responded with {status} status code')
         if status != 200: continue
 
-        content = response.read()
-        if content is None: continue
+        content = response.read().strip()
         # TEST
-        with open(f'latest response from {site}.json', 'w', encoding = 'utf-8') as f:
+        with open(f'latest-response-from-{site}.json', 'w', encoding = 'utf-8') as f:
             s = content.decode('utf-8')
             f.write(s)
         # ENDTEST
+        if len(content) == 0: continue
 
         try:
             data = json.loads(content)
