@@ -12,4 +12,4 @@
 
 ## 1. Starting the server
 1. Activate your virtual environment, if any.
-2.  Run `python manage.py runserver`.
+2.  Run `python manage.py runserver 0:8000`.
