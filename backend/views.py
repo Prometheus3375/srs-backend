@@ -1,4 +1,4 @@
-from django.http import HttpResponse, HttpRequest, HttpResponseBadRequest, FileResponse
+from django.http import HttpResponse, HttpRequest, HttpResponseBadRequest, FileResponse, JsonResponse
 from django.contrib.sessions.backends.base import SessionBase
 from django_backend.misc import printd
 from typing import List, Tuple, Union
@@ -74,7 +74,7 @@ def process_query(request: HttpRequest):
         if len(result) > 0:
             printd(f'Type of data[0] is {type(result[0]).__name__}')
         session['data'] = result
-        return HttpResponse(json.dumps(result), content_type = 'application/json')
+        return JsonResponse(result, safe = False)
 
     printd(f'Invalid \'{request.method}\' request is received')
     return HttpResponseBadRequest()
