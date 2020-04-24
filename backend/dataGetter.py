@@ -2,7 +2,7 @@ import json
 import re
 import traceback
 from http.client import HTTPResponse
-from typing import List
+from typing import Dict, List, Union
 from urllib.error import HTTPError, URLError
 from urllib.request import urlopen
 
@@ -16,7 +16,7 @@ _re_spaces = re.compile(r'\s+')
 _url_start = r'http'
 
 
-def postprocess(itemlist: List[dict]):
+def postprocess(itemlist: List[dict]) -> List[Dict[str, Union[str, List[str]]]]:
     """Converts fields' values of each object to proper strings or lists of string"""
     for obj in itemlist:
         for key, value in obj.items():
@@ -40,6 +40,7 @@ def postprocess(itemlist: List[dict]):
                 del obj[key]
                 key = str(key)
             obj[key] = value
+    return itemlist
 
 
 def get(querytype: str, sites: List[str], query: str) -> List[dict]:
@@ -76,5 +77,4 @@ def get(querytype: str, sites: List[str], query: str) -> List[dict]:
             result += data
         elif isinstance(data, dict):
             result.append(data)
-    postprocess(result)
-    return result
+    return postprocess(result)
