@@ -4,7 +4,7 @@ from django.test.client import Client
 c = Client()
 
 
-class TestIndex(TestCase):
+class TestCSV(TestCase):
 
     @classmethod
     def setUpTestData(cls):
@@ -16,16 +16,11 @@ class TestIndex(TestCase):
         pass
 
     def testGetIndex(self):
-        response = c.get('/api/')
-        self.assertEqual(response.status_code, 200)
-
-    def testPostIndex(self):
-        # TODO: change body of request
-        response = c.post('/api/', {'username': 'admin', 'password': 'qwerty'})
+        response = c.get('/api/csv_request')
         self.assertEqual(response.status_code, 200)
 
 
-class TestResults(TestCase):
+class TestQuery(TestCase):
 
     @classmethod
     def setUpTestData(cls):
@@ -37,5 +32,5 @@ class TestResults(TestCase):
         pass
 
     def testGetResults(self):
-        response = c.get('/api/results')
+        response = c.get('/api/process_query')
         self.assertEqual(response.status_code, 200)
