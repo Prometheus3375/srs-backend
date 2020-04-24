@@ -90,7 +90,6 @@ def csv_request(request: HttpRequest):
     printd(f'Session {session.session_key}')
     if request.method == 'GET':
         csv_str = csvMaker.make(session.get('data', []))
-        session.modified = True  # to ensure that changes made inside csvMaker.make will be saved
         return FileResponse(io.BytesIO(csv_str.encode()), as_attachment = True, filename = csvMaker.Filename)
 
     printd(f'Invalid \'{request.method}\' request is received')
