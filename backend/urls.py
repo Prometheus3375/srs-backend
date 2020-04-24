@@ -3,6 +3,6 @@ from . import views, apps
 
 app_name = apps.BackendConfig.name
 urlpatterns = [
-    path('', views.index, name= 'index'),
-    path('results', views.results, name= 'results'),
+    path('', views.index, name='index'),
+    path('results', views.results, name='results'),
 ]
