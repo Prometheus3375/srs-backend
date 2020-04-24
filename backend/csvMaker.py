@@ -4,7 +4,7 @@ import io
 import re
 
 Filename = 'export.csv'
-_spaces_pattern = re.compile(r'\s+')
+_re_spaces = re.compile(r'\s+')
 
 
 def replace(text: str, pattern: re, repl: str) -> str:
@@ -33,8 +33,13 @@ def make(itemlist: List[dict]) -> str:
                 if value is None:
                     value = ''
                 elif isinstance(value, list):
-                    value = ' '.join([str(v) for v in value])
-                value = replace(str(value), _spaces_pattern, ' ')
+                    vals = []
+                    for v in value:
+                        v = replace(str(v), _re_spaces, ' ').strip()
+                        if v: vals.append(v)
+                    value = '\n'.join(vals)
+                else:
+                    value = replace(str(value), _re_spaces, ' ').strip()
                 obj[key] = value
             writer.writerow(obj)
         return csvfile.getvalue()
