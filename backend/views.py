@@ -1,70 +1,45 @@
-from django.http import HttpResponse, HttpRequest, Http404, HttpResponseRedirect, HttpResponseBadRequest
-from rest_framework.response import Response
-from rest_framework.request import Request
-from rest_framework.decorators import api_view
-from rest_framework import status
-from django.shortcuts import render
+from django.http import HttpResponse, HttpRequest, HttpResponseBadRequest, FileResponse
 from django.contrib.sessions.backends.base import SessionBase
+from django_backend.misc import printd
+from . import csvMaker
+import io
 import json
 
 
-@api_view(['GET', 'POST'])
-def index(request: Request):
+def process_query(request: HttpRequest):
     session: SessionBase = request.session
+    printd(f'\nSession {session.session_key}')
+    printd(f'''Remote IP: {request.META['REMOTE_ADDR']}''')
     if request.method == 'GET':
-        session['data'] = []
-        return Response()
-    elif request.method == 'POST':
-        data = [
-            {
-                'name': 'Super notebook',
-                'price': '1000$',
-                'sites': ['amazon', 'e-bay'],
-            },
-            {
-                'name': 'Not a super notebook',
-                'price': '10$',
-                'sites': ['amazon', 'e-bay'],
-            },
-        ]
+        printd(request.GET)
+        # parse GET data
+        # for each site selected
+        # send to data
+        # wait response
+        # append to overall result
+        # TEST
+        with open('backend/sample.json', 'r', encoding = 'utf-8') as f:
+            data = json.load(f)
+        # ENDTEST
+        printd(f'Type of data is {type(data).__name__}')
+        printd(f'Type of data[0] is {type(data[0]).__name__}')
         session['data'] = data
-        return Response(data)
+        return HttpResponse(json.dumps(data), content_type = 'application/json')
+
+    printd(f'Invalid \'{request.method}\' request is received')
+    return HttpResponseBadRequest()
 
 
-@api_view(['GET'])
-def results(request: Request):
+def csv_request(request: HttpRequest):
     session: SessionBase = request.session
-    data = session['data']
-    return Response(data)
+    printd(f'\nSession {session.session_key}')
+    if request.method == 'GET':
+        # csv_str = csvMaker.make(session['data'])
+        # TEST
+        with open('backend/sample.json', 'r', encoding = 'utf-8') as f:
+            csv_str = f.read()
+        # ENDTEST
+        return FileResponse(io.BytesIO(csv_str.encode()), as_attachment = True, filename = csvMaker.Filename)
 
-# def index(request: HttpRequest):
-#     session: SessionBase = request.session
-#     if request.method == 'POST':
-#         # session.cycle_key()
-#         data = [
-#             {
-#                 'name': 'Super notebook',
-#                 'price': '1000$',
-#                 'sites': ['amazon', 'e-bay'],
-#             },
-#             {
-#                 'name': 'Not a super notebook',
-#                 'price': '10$',
-#                 'sites': ['amazon', 'e-bay'],
-#             },
-#         ]
-#         session['data'] = data
-#         return HttpResponse('This is main page')
-#     else:
-#         print(f'{session} sent {request.method} request')
-#         return HttpResponseBadRequest()
-
-
-# def results(request: HttpRequest):
-#     session: SessionBase = request.session
-#     if request.method == 'GET':
-#         data = session['data']
-#         return HttpResponse(json.dumps(data))
-#     else:
-#         print(f'{session} sent {request.method} request')
-#         return HttpResponseBadRequest()
+    printd(f'Invalid \'{request.method}\' request is received')
+    return HttpResponseBadRequest()
