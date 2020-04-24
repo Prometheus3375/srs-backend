@@ -67,7 +67,7 @@ def process_query(request: HttpRequest):
         printd(f'Type of data is {type(result).__name__}')
         printd(f'Type of data[0] is {type(result[0]).__name__}')
         session['data'] = result
-        return HttpResponse(json.dumps(result), content_type = 'application/json')
+        return HttpResponse(json.dumps(result), content_type='application/json')
 
     printd(f'Invalid \'{request.method}\' request is received')
     return HttpResponseBadRequest()
@@ -82,7 +82,7 @@ def csv_request(request: HttpRequest):
         # with open('backend/sample.json', 'r', encoding = 'utf-8') as f:
         #     csv_str = f.read()
         # ENDTEST
-        return FileResponse(io.BytesIO(csv_str.encode()), as_attachment = True, filename = csvMaker.Filename)
+        return FileResponse(io.BytesIO(csv_str.encode()), as_attachment=True, filename=csvMaker.Filename)
 
     printd(f'Invalid \'{request.method}\' request is received')
     return HttpResponseBadRequest()

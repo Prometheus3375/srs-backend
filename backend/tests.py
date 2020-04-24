@@ -15,8 +15,8 @@ class TestCSV(TestCase):
         print("setUp: Run once for every test method to setup clean data.")
         pass
 
-    def testGetIndex(self):
-        response = c.get('/api/csv_request')
+    def testGetCSV(self):
+        response = c.get('/api/make-csv')
         self.assertEqual(response.status_code, 200)
 
 
@@ -32,5 +32,5 @@ class TestQuery(TestCase):
         pass
 
     def testGetResults(self):
-        response = c.get('/api/process_query')
+        response = c.get('/api/process-query')
         self.assertEqual(response.status_code, 200)
