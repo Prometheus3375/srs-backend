@@ -1,31 +1,38 @@
-from django.http import HttpResponse, HttpRequest, HttpResponseBadRequest, FileResponse
-from django.contrib.sessions.backends.base import SessionBase
-from django_backend.misc import printd
-from typing import List, Tuple, Union
-from . import csvMaker, dataGetter
 import io
 import json
+from typing import List, Tuple, Union
+
+from django.contrib.sessions.backends.base import SessionBase
+from django.http import FileResponse, HttpRequest, HttpResponseBadRequest, JsonResponse
+
+from django_backend.misc import printd
+from . import csvMaker, dataGetter
 
 
-def _parsePQGET(get: dict) -> Union[Tuple[str, List[str], str], None]:
-    printd(get)
-    if not ('sites' in get and 'query' in get):
+def _parsePQBody(body_bytes: bytes) -> Union[Tuple[str, List[str], str], None]:
+    printd(f'Bytes in the body: {body_bytes}')
+    try:
+        body = json.loads(body_bytes)
+    except json.JSONDecodeError:
         return None
 
-    query = get['query']
+    if not (isinstance(body, dict) and 'sites' in body and 'query' in body):
+        return None
+
+    query = body['query']
     if not isinstance(query, str):
         printd(f'ERROR: given query is not a string')
         return None
     query = query.lower()
 
-    sites = get['sites']
+    sites = body['sites']
     if isinstance(sites, str):
         sites = [sites.lower()]
     elif isinstance(sites, list):
         for i in range(len(sites)):
             site = sites[i]
             if not isinstance(site, str):
-                printd(f'ERROR: object on position {i} is sites is not a sting')
+                printd(f'ERROR: object on position {i} is sites is not a string')
                 return None
             sites[i] = site.lower()
     else:
@@ -49,40 +56,43 @@ def _parsePQGET(get: dict) -> Union[Tuple[str, List[str], str], None]:
 
 
 def process_query(request: HttpRequest):
+    printd('\nRequest is sent to /api/process-query')
     session: SessionBase = request.session
-    printd(f'\nSession {session.session_key}')
-    printd(f'''Remote IP: {request.META['REMOTE_ADDR']}''')
-    if request.method == 'GET':
-        # get = _parsePQGET(request.GET)
-        # if get is None:
-        #     return HttpResponseBadRequest()
+    printd(f'Session {session.session_key}')
+    if request.method == 'POST':
+        body = _parsePQBody(request.body)
+        if body is None:
+            return HttpResponseBadRequest()
         # TEST
-        get = 'category', ['amazon'], 'iphone11'
+        # body = 'category', ['amazon'], 'iphone11'
+        # body = 'city', ['airbnb'], 'kazan'
         # ENDTEST
-        result = dataGetter.get(*get)
+        result = dataGetter.get(*body)
         # TEST
         # with open('backend/sample.json', 'r', encoding = 'utf-8') as f:
         #     result = json.load(f)
         # ENDTEST
-        printd(f'Type of data is {type(result).__name__}')
-        printd(f'Type of data[0] is {type(result[0]).__name__}')
+        printd(f'Type of result is {type(result).__name__}')
+        if len(result) > 0:
+            printd(f'    type of result[0] is {type(result[0]).__name__}')
+        else:
+            printd(f'    result is empty')
+
         session['data'] = result
-        return HttpResponse(json.dumps(result), content_type='application/json')
+        session.modified = True  # to ensure that changes will be saved
+        return JsonResponse(result, safe = False)
 
     printd(f'Invalid \'{request.method}\' request is received')
     return HttpResponseBadRequest()
 
 
 def csv_request(request: HttpRequest):
+    printd('\nRequest is sent to /api/make-csv')
     session: SessionBase = request.session
-    printd(f'\nSession {session.session_key}')
+    printd(f'Session {session.session_key}')
     if request.method == 'GET':
         csv_str = csvMaker.make(session.get('data', []))
-        # TEST
-        # with open('backend/sample.json', 'r', encoding = 'utf-8') as f:
-        #     csv_str = f.read()
-        # ENDTEST
-        return FileResponse(io.BytesIO(csv_str.encode()), as_attachment=True, filename=csvMaker.Filename)
+        return FileResponse(io.BytesIO(csv_str.encode()), as_attachment = True, filename = csvMaker.Filename)
 
     printd(f'Invalid \'{request.method}\' request is received')
     return HttpResponseBadRequest()
