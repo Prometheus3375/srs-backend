@@ -31,6 +31,20 @@ class TestQuery(TestCase):
         print("setUp: Run once for every test method to setup clean data.")
         pass
 
-    def testGetResults(self):
-        response = c.get('/api/process-query')
+    def testQueryEmptyBody(self):
+        response = c.post('/api/process-query', {})
+        self.assertEqual(response.status_code, 400)
+
+    def testQueryWrongBody(self):
+        response = c.post('/api/process-query', {
+            "websites": ["amazon"],
+            "query": "food"
+        })
+        self.assertEqual(response.status_code, 400)
+
+    def testQueryCorrectBody(self):
+        response = c.post('/api/process-query', {
+            "sites": ["amazon"],
+            "query": "food"
+        })
         self.assertEqual(response.status_code, 200)
