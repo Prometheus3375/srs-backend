@@ -92,7 +92,7 @@ def csv_request(request: HttpRequest):
     printd(f'Session {session.session_key}')
     if request.method == 'GET':
         csv_str = csvMaker.make(session.get('data', []))
-        return FileResponse(io.BytesIO(csv_str.encode()), as_attachment = True, filename = csvMaker.Filename)
+        return FileResponse(io.BytesIO(csv_str.encode()), as_attachment=True, filename=csvMaker.Filename)
 
     printd(f'Invalid \'{request.method}\' request is received')
     return HttpResponseBadRequest()
