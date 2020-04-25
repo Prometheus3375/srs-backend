@@ -14,3 +14,4 @@
 1. Activate your virtual environment, if any.
 2. If you are starting server the first time then run `python manage.py migrate`.
 3. Run `python manage.py runserver 0:8000` to start the server.
+4. (Optional) For testing purposes run `python manage.py test`
