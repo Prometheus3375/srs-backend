@@ -7,18 +7,23 @@ import io
 import json
 
 
-def _parsePQGET(get: dict) -> Union[Tuple[str, List[str], str], None]:
-    printd(get)
-    if not ('sites' in get and 'query' in get):
+def _parsePQBody(body_bytes: bytes) -> Union[Tuple[str, List[str], str], None]:
+    printd(bytes)
+    try:
+        body = json.loads(body_bytes)
+    except json.JSONDecodeError:
         return None
 
-    query = get['query']
+    if not (isinstance(body, dict) and 'sites' in body and 'query' in body):
+        return None
+
+    query = body['query']
     if not isinstance(query, str):
         printd(f'ERROR: given query is not a string')
         return None
     query = query.lower()
 
-    sites = get['sites']
+    sites = body['sites']
     if isinstance(sites, str):
         sites = [sites.lower()]
     elif isinstance(sites, list):
@@ -53,7 +58,7 @@ def process_query(request: HttpRequest):
     printd(f'\nSession {session.session_key}')
     printd(f'''Remote IP: {request.META['REMOTE_ADDR']}''')
     if request.method == 'GET':
-        get = _parsePQGET(request.GET)
+        get = _parsePQBody(request.body)
         if get is None:
             return HttpResponseBadRequest()
         # TEST
