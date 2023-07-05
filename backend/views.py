@@ -54,9 +54,8 @@ def _parsePQBody(body_bytes: bytes) -> Union[Tuple[str, List[str], str], None]:
 
 
 def process_query(request: HttpRequest):
-    session: SessionBase = request.session
-    printd(f'\nSession {session.session_key}')
-    printd(f'''Remote IP: {request.META['REMOTE_ADDR']}''')
+    printd()
+    # printd(f'''Remote IP: {request.META['REMOTE_ADDR']}''')
     if request.method == 'POST':
         body = _parsePQBody(request.body)
         if body is None:
@@ -73,7 +72,11 @@ def process_query(request: HttpRequest):
         printd(f'Type of data is {type(result).__name__}')
         if len(result) > 0:
             printd(f'Type of data[0] is {type(result[0]).__name__}')
+
+        session: SessionBase = request.session
         session['data'] = result
+        session.modified = True  # to ensure that changes will be saved
+        printd(f'Session {session.session_key}')
         return JsonResponse(result, safe = False)
 
     printd(f'Invalid \'{request.method}\' request is received')
@@ -81,10 +84,12 @@ def process_query(request: HttpRequest):
 
 
 def csv_request(request: HttpRequest):
-    session: SessionBase = request.session
-    printd(f'\nSession {session.session_key}')
+    printd()
     if request.method == 'GET':
+        session: SessionBase = request.session
         csv_str = csvMaker.make(session.get('data', []))
+        session.modified = True  # to ensure that changes made inside csvMaker.make will be saved
+        printd(f'Session {session.session_key}')
         return FileResponse(io.BytesIO(csv_str.encode()), as_attachment = True, filename = csvMaker.Filename)
 
     printd(f'Invalid \'{request.method}\' request is received')
