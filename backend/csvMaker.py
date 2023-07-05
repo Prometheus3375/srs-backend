@@ -1,6 +1,6 @@
-from typing import Dict, List, Union
 import csv
 import io
+from typing import Dict, List, Union
 
 Filename = 'export.csv'
 
