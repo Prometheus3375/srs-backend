@@ -24,7 +24,9 @@ SECRET_KEY = 'dz*^t41(utgx#qnza%3%qq(8p&==vdws5fq7xjsc(hwu&*gv(e'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+
+]
 
 APPEND_SLASH = False
 
@@ -61,10 +63,10 @@ MIDDLEWARE = [
     # 'corsheaders.middleware.CorsMiddleware',
 ]
 
-CORS_ORIGIN_ALLOW_ALL = False
-CORS_ORIGIN_WHITELIST = (
-    'http://localhost:3000',
-)
+# CORS_ORIGIN_ALLOW_ALL = False
+# CORS_ORIGIN_WHITELIST = (
+#     'http://localhost:3000',
+# )
 
 ROOT_URLCONF = 'django_backend.urls'
 
