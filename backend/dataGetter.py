@@ -1,11 +1,13 @@
 from typing import List
-from urllib import request
+from urllib.request import urlopen
+from urllib.error import HTTPError, URLError
+from http.client import HTTPResponse
 from django_backend.misc import printd
 import json
 import traceback
 
 Scheme = 'http'
-Host = '95.217.166.108:6379'
+Host = '188.130.155.81:6379'
 Address = f'{Scheme}://{Host}'
 
 
@@ -13,12 +15,18 @@ def get(querytype: str, sites: List[str], query: str) -> List[dict]:
     result = []
     for site in sites:
         url = f'{Address}/get_{site}?{querytype}={query}'
-        response = request.urlopen(url)
+        try:
+            response: HTTPResponse = urlopen(url)
+        except (HTTPError, URLError) as e:
+            traces = '\n'.join(traceback.format_tb(e.__traceback__))
+            printd(f'An error occurred: {e} {{\n{traces}}}')
+            continue
 
-        printd(f'Data responded with {response.status_code} status code')
-        if response.status_code != 200: continue
+        status = response.getcode()
+        printd(f'Data responded with {status} status code')
+        if status != 200: continue
 
-        content = response.content
+        content = response.read()
         if content is None: continue
 
         try:
