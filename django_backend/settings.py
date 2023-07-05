@@ -24,7 +24,11 @@ SECRET_KEY = 'dz*^t41(utgx#qnza%3%qq(8p&==vdws5fq7xjsc(hwu&*gv(e'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+
+]
+
+APPEND_SLASH = False
 
 SESSION_ENGINE = 'django.contrib.sessions.backends.file'
 SESSION_FILE_PATH = 'sessions'
@@ -32,19 +36,19 @@ if not os.path.isdir(SESSION_FILE_PATH):
     if os.path.isfile(SESSION_FILE_PATH):
         os.remove(SESSION_FILE_PATH)
     os.mkdir(SESSION_FILE_PATH)
-# SESSION_EXPIRE_AT_BROWSER_CLOSE = True
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 
 # Application definition
 
 INSTALLED_APPS = [
     # 'django.contrib.admin',
-    'django.contrib.auth',
-    'django.contrib.contenttypes',
+    # 'django.contrib.auth',
+    # 'django.contrib.contenttypes',
     'django.contrib.sessions',
-    'django.contrib.messages',
-    'django.contrib.staticfiles',
-    'rest_framework',
-    'corsheaders',
+    # 'django.contrib.messages',
+    # 'django.contrib.staticfiles',
+    # 'rest_framework',
+    # 'corsheaders',
     'backend',
 ]
 
@@ -53,16 +57,16 @@ MIDDLEWARE = [
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
-    'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.messages.middleware.MessageMiddleware',
+    # 'django.contrib.auth.middleware.AuthenticationMiddleware',
+    # 'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'corsheaders.middleware.CorsMiddleware',
+    # 'corsheaders.middleware.CorsMiddleware',
 ]
 
-CORS_ORIGIN_ALLOW_ALL = False
-CORS_ORIGIN_WHITELIST = (
-    'http://localhost:3000',
-)
+# CORS_ORIGIN_ALLOW_ALL = False
+# CORS_ORIGIN_WHITELIST = (
+#     'http://localhost:3000',
+# )
 
 ROOT_URLCONF = 'django_backend.urls'
 
