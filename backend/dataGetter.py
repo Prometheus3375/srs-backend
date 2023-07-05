@@ -3,12 +3,41 @@ from urllib.request import urlopen
 from urllib.error import HTTPError, URLError
 from http.client import HTTPResponse
 from django_backend.misc import printd
+from .misc import replace
 import json
+import re
 import traceback
 
 Scheme = 'http'
 Host = '188.130.155.81:6379'
 Address = f'{Scheme}://{Host}'
+_re_spaces = re.compile(r'\s+')
+_url_start = r'http'
+
+
+def postprocess(itemlist: List[dict]):
+    """Converts fields' values of each object to proper strings or lists of string"""
+    for obj in itemlist:
+        for key, value in obj.items():
+            if value is None:
+                value = ''
+            elif isinstance(value, list):
+                # Clean values inside the list
+                vals = []
+                is_url = False
+                for v in value:
+                    v = replace(str(v), _re_spaces, ' ').strip()
+                    if v: vals.append(v)
+                    is_url = is_url and v.startswith(_url_start)
+                # Join values if they are not URLs
+                value = vals if is_url else '\n'.join(vals)
+            else:
+                value = replace(str(value), _re_spaces, ' ').strip()
+            # Change key if it is not a string
+            if not isinstance(key, str):
+                del obj[key]
+                key = str(key)
+            obj[key] = value
 
 
 def get(querytype: str, sites: List[str], query: str) -> List[dict]:
@@ -45,4 +74,5 @@ def get(querytype: str, sites: List[str], query: str) -> List[dict]:
             result += data
         elif isinstance(data, dict):
             result.append(data)
+    postprocess(result)
     return result
