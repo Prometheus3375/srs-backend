@@ -25,7 +25,10 @@ SECRET_KEY = 'dz*^t41(utgx#qnza%3%qq(8p&==vdws5fq7xjsc(hwu&*gv(e'
 DEBUG = True
 
 ALLOWED_HOSTS = [
-
+    'localhost',
+    '127.0.0.1',
+    '[::1]',
+    '95.217.166.108',
 ]
 
 APPEND_SLASH = False
