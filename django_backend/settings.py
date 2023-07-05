@@ -39,7 +39,7 @@ if not os.path.isdir(SESSION_FILE_PATH):
     if os.path.isfile(SESSION_FILE_PATH):
         os.remove(SESSION_FILE_PATH)
     os.mkdir(SESSION_FILE_PATH)
-SESSION_EXPIRE_AT_BROWSER_CLOSE = False
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 
 # Application definition
 
