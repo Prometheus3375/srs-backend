@@ -1,5 +1,6 @@
 from django.urls import path
-from . import views, apps
+
+from . import apps, views
 
 app_name = apps.BackendConfig.name
 urlpatterns = [
