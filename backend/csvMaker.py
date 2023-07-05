@@ -14,7 +14,7 @@ def make(itemlist: List[Dict[str, Union[str, List[str]]]]) -> str:
         writer.writeheader()
         for obj in itemlist:
             obj = obj.copy()
-            for key, value in obj:
+            for key, value in obj.items():
                 if isinstance(value, list):
                     obj[key] = '\n'.join(value)
             writer.writerow(obj)

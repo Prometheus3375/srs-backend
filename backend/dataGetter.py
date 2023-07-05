@@ -25,13 +25,14 @@ def postprocess(itemlist: List[dict]):
             elif isinstance(value, list):
                 # Clean values inside the list
                 vals = []
-                is_url = False
+                only_urls = True
                 for v in value:
                     v = replace(str(v), _re_spaces, ' ').strip()
-                    if v: vals.append(v)
-                    is_url = is_url and v.startswith(_url_start)
-                # Join values if they are not URLs
-                value = vals if is_url else '\n'.join(vals)
+                    if len(v) == 0: continue
+                    vals.append(v)
+                    only_urls = only_urls and v.startswith(_url_start)
+                # Join values if they are not URLs. Do not join if list is empty
+                value = vals if only_urls else '\n'.join(vals)
             else:
                 value = replace(str(value), _re_spaces, ' ').strip()
             # Change key if it is not a string
