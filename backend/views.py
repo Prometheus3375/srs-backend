@@ -68,7 +68,7 @@ def process_query(request: HttpRequest):
         # result = dataGetter.get(*get)
         # TEST
         with open('backend/sample.json', 'r', encoding = 'utf-8') as f:
-            result = f.read()
+            result = json.load(f)
         # ENDTEST
         printd(f'Type of data is {type(result).__name__}')
         if len(result) > 0:
