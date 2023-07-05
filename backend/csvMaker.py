@@ -21,8 +21,7 @@ def replace(text: str, pattern: re, repl: str) -> str:
 
 
 def make(itemlist: List[dict]) -> str:
-    # set newline to None to make newlines are written as \n on all platforms
-    with io.StringIO() as csvfile:
+    with io.StringIO(newline = None) as csvfile:
         fieldnames = set().union(*(obj.keys() for obj in itemlist))
         fieldnames = sorted(fieldnames)
         writer = csv.DictWriter(csvfile, fieldnames = fieldnames)
