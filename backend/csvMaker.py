@@ -4,16 +4,15 @@ import io
 
 Filename = 'export.csv'
 
-def get_fieldnames(data):
-    return set().union(*(d.keys() for d in data))
 
 def make(data: List[dict]) -> str:
+    # set newline to None to make newlines are written as \n on all platforms
     with io.StringIO() as csvfile:
-        fieldnames = get_fieldnames(data)
-        writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+        fieldnames = set().union(*(d.keys() for d in data))
+        fieldnames = sorted(fieldnames)
+        writer = csv.DictWriter(csvfile, fieldnames = fieldnames)
 
         writer.writeheader()
         for row in data:
             writer.writerow(row)
         return csvfile.getvalue()
-
