@@ -1,4 +1,4 @@
-from django.http import HttpResponse, HttpRequest, HttpResponseBadRequest, FileResponse, JsonResponse
+from django.http import HttpRequest, HttpResponseBadRequest, FileResponse, JsonResponse
 from django.contrib.sessions.backends.base import SessionBase
 from django_backend.misc import printd
 from typing import List, Tuple, Union
@@ -30,7 +30,7 @@ def _parsePQBody(body_bytes: bytes) -> Union[Tuple[str, List[str], str], None]:
         for i in range(len(sites)):
             site = sites[i]
             if not isinstance(site, str):
-                printd(f'ERROR: object on position {i} is sites is not a sting')
+                printd(f'ERROR: object on position {i} is sites is not a string')
                 return None
             sites[i] = site.lower()
     else:
@@ -58,17 +58,17 @@ def process_query(request: HttpRequest):
     printd(f'\nSession {session.session_key}')
     printd(f'''Remote IP: {request.META['REMOTE_ADDR']}''')
     if request.method == 'GET':
-        get = _parsePQBody(request.body)
-        if get is None:
+        body = _parsePQBody(request.body)
+        if body is None:
             return HttpResponseBadRequest()
         # TEST
-        # get = 'category', ['amazon'], 'iphone11'
-        # get = 'city', ['airbnb'], 'kazan'
+        # body = 'category', ['amazon'], 'iphone11'
+        # body = 'city', ['airbnb'], 'kazan'
         # ENDTEST
-        # result = dataGetter.get(*get)
+        result = dataGetter.get(*body)
         # TEST
-        with open('backend/sample.json', 'r', encoding = 'utf-8') as f:
-            result = json.load(f)
+        # with open('backend/sample.json', 'r', encoding = 'utf-8') as f:
+        #     result = json.load(f)
         # ENDTEST
         printd(f'Type of data is {type(result).__name__}')
         if len(result) > 0:
