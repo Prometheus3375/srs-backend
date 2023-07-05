@@ -28,6 +28,9 @@ def get(querytype: str, sites: List[str], query: str) -> List[dict]:
 
         content = response.read()
         if content is None: continue
+        with open('sample.json', 'w', encoding = 'utf-8') as f:
+            s = content.decode('utf-8')
+            f.write(s)
 
         try:
             data = json.loads(content)
